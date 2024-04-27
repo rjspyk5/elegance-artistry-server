@@ -36,7 +36,12 @@ async function run() {
       res.send(result);
     });
     // find specific users data
-
+    app.get("/myart/:email", async (req, res) => {
+      const query = { email: req.params.email };
+      const cursor = artsCollection.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
+    });
     // find all data and send first six data for homepage
     app.get("/arts/six", async (req, res) => {
       const cursor = artsCollection.find();
