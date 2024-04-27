@@ -24,6 +24,21 @@ async function run() {
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
     );
+    // Created database connection
+    const artsCollection = client.db("eleganceArtistary").collection("arts");
+    // find all data from database
+    app.get("/arts", async (req, res) => {
+      const cursor = artsCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+    // find single data from on database
+    app.get("/art/:id", async (req, res) => {
+      const id = req.params.id;
+      const qurey = { _id: new ObjectId(id) };
+      const result = await artsCollection.findOne(qurey);
+      res.send(result);
+    });
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
