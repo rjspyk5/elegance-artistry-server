@@ -33,14 +33,14 @@ async function run() {
     app.get("/arts", async (req, res) => {
       const cursor = artsCollection.find();
       const result = await cursor.toArray();
-
       res.send(result);
     });
+    // find specific users data
+
     // find all data and send first six data for homepage
     app.get("/arts/six", async (req, res) => {
       const cursor = artsCollection.find();
       const result = await cursor.toArray();
-
       res.send(result.slice(0, 6));
     });
     // find single data from on database
