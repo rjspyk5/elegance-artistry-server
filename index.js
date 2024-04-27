@@ -40,10 +40,23 @@ async function run() {
       res.send(result);
     });
     // post single iteam on database
-    app.get("/art", async (req, res) => {
+    app.post("/art", async (req, res) => {
       const data = req.body;
       const result = await artsCollection.insertOne(data);
       res.send(result);
+    });
+    // update a single iteam on database
+    app.patch("/art/:id", async (req, res) => {
+      const id = req.params.id;
+      const data = req.body;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: {
+          plot: `A harvest of random numbers, such as: ${Math.random()}`,
+        },
+      };
+      const result = await artsCollection.updateOne(filter, updateDoc, options);
     });
   } finally {
     // Ensures that the client will close when you finish/error
