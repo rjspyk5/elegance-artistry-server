@@ -76,10 +76,10 @@ async function run() {
       res.send(result);
     });
     // delete a single data from database
-    app.delete("art/:id", async (req, res) => {
+    app.delete("/art/:id", async (req, res) => {
       const id = req.params.id;
       const qurey = { _id: new ObjectId(id) };
-      const result = await movies.deleteOne(qurey);
+      const result = await artsCollection.deleteOne(qurey);
       res.send(result);
     });
   } finally {
