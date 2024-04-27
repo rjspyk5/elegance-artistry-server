@@ -69,7 +69,17 @@ async function run() {
       const options = { upsert: true };
       const updateDoc = {
         $set: {
-          plot: `A harvest of random numbers, such as: ${Math.random()}`,
+          art_name: data.art_name,
+          description: data.description,
+          photo: data.photo,
+          email: data.email,
+          username: data.username,
+          subcategory: data.subcategory,
+          price: data.price,
+          process_time: data.process_time,
+          customization: data.customization,
+          rating: data.rating,
+          stock: data.stock,
         },
       };
       const result = await artsCollection.updateOne(filter, updateDoc, options);
