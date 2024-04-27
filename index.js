@@ -7,6 +7,9 @@ const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 app.use(express.json());
 app.use(cors());
 
+app.get("/", (req, res) => {
+  res.send("server running");
+});
 const uri = `mongodb+srv://${process.env.USER_NAME}:${process.env.PASSWORD}@cluster0.omgilvs.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
 const client = new MongoClient(uri, {
@@ -19,18 +22,26 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
-    await client.connect();
-    await client.db("admin").command({ ping: 1 });
-    console.log(
-      "Pinged your deployment. You successfully connected to MongoDB!"
-    );
+    // await client.connect();
+    // await client.db("admin").command({ ping: 1 });
+    // console.log(
+    //   "Pinged your deployment. You successfully connected to MongoDB!"
+    // );
     // Created database connection
     const artsCollection = client.db("eleganceArtistary").collection("arts");
     // find all data from database
     app.get("/arts", async (req, res) => {
       const cursor = artsCollection.find();
       const result = await cursor.toArray();
+
       res.send(result);
+    });
+    // find all data and send first six data for homepage
+    app.get("/arts/six", async (req, res) => {
+      const cursor = artsCollection.find();
+      const result = await cursor.toArray();
+
+      res.send(result.slice(0, 6));
     });
     // find single data from on database
     app.get("/art/:id", async (req, res) => {
@@ -39,7 +50,7 @@ async function run() {
       const result = await artsCollection.findOne(qurey);
       res.send(result);
     });
-    // post single iteam on database
+    //insert single iteam on database
     app.post("/art", async (req, res) => {
       const data = req.body;
       const result = await artsCollection.insertOne(data);
