@@ -57,6 +57,14 @@ async function run() {
         },
       };
       const result = await artsCollection.updateOne(filter, updateDoc, options);
+      res.send(result);
+    });
+    // delete a single data from database
+    app.delete("art/:id", async (req, res) => {
+      const id = req.params.id;
+      const qurey = { _id: new ObjectId(id) };
+      const result = await movies.deleteOne(qurey);
+      res.send(result);
     });
   } finally {
     // Ensures that the client will close when you finish/error
