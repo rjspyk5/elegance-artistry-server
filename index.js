@@ -39,6 +39,12 @@ async function run() {
       const result = await artsCollection.findOne(qurey);
       res.send(result);
     });
+    // post single iteam on database
+    app.get("/art", async (req, res) => {
+      const data = req.body;
+      const result = await artsCollection.insertOne(data);
+      res.send(result);
+    });
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
