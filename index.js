@@ -29,6 +29,9 @@ async function run() {
     // );
     // Created database connection
     const artsCollection = client.db("eleganceArtistary").collection("arts");
+    const reviewCollection = client
+      .db("eleganceArtistary")
+      .collection("review");
     // find all data from database
     app.get("/arts", async (req, res) => {
       const cursor = artsCollection.find();
@@ -48,6 +51,13 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result.slice(0, 6));
     });
+
+    // find all data and send first six data for lastest review
+    app.get("/review", async (req, res) => {
+      const cursor = reviewCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
     // find single data from on database
     app.get("/art/:id", async (req, res) => {
       const id = req.params.id;
@@ -55,12 +65,20 @@ async function run() {
       const result = await artsCollection.findOne(qurey);
       res.send(result);
     });
+    // insert single review on review collection
+    app.post("/review", async (req, res) => {
+      const data = req.body;
+      const result = await reviewCollection.insertOne(data);
+      res.send(result);
+    });
+
     //insert single iteam on database
     app.post("/art", async (req, res) => {
       const data = req.body;
       const result = await artsCollection.insertOne(data);
       res.send(result);
     });
+
     // update a single iteam on database
     app.patch("/art/:id", async (req, res) => {
       const id = req.params.id;
