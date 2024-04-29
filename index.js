@@ -35,39 +35,46 @@ async function run() {
     const artsCatagory = client
       .db("eleganceArtistary")
       .collection("artsCatagory");
-    // find all data from database
+    // find all data from from artCollection
     app.get("/arts", async (req, res) => {
       const cursor = artsCollection.find();
       const result = await cursor.toArray();
       res.send(result);
     });
-    // find specific users data
+    // find specific users data from artCollection
     app.get("/myart/:email", async (req, res) => {
       const query = { email: req.params.email };
       const cursor = artsCollection.find(query);
       const result = await cursor.toArray();
       res.send(result);
     });
-    // find all data and send first six data for homepage
+    // find specific catagory data from artCollection
+    app.get("/catagory/:sub", async (req, res) => {
+      const query = { subcategory_Name: req.params.sub };
+      const cursor = artsCatagory.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+    // find all data and send first six data for homepage from artCollection
     app.get("/arts/six", async (req, res) => {
       const cursor = artsCollection.find();
       const result = await cursor.toArray();
       res.send(result.slice(0, 6));
     });
 
-    // find all data
+    // find all review
     app.get("/review", async (req, res) => {
       const cursor = reviewCollection.find();
       const result = await cursor.toArray();
       res.send(result);
     });
-    // find subcatagory data
+    // find subcatagory data from artSubcatagory
     app.get("/subcategory", async (req, res) => {
       const cursor = artsCatagory.find();
       const result = await cursor.toArray();
       res.send(result);
     });
-    // find single data from on database
+    // find single data from artCollection
     app.get("/art/:id", async (req, res) => {
       const id = req.params.id;
       const qurey = { _id: new ObjectId(id) };
@@ -101,7 +108,7 @@ async function run() {
           photo: data.photo,
           email: data.email,
           username: data.username,
-          subcategory: data.subcategory,
+          subcategory_Name: data.subcategory_Name,
           price: data.price,
           process_time: data.process_time,
           customization: data.customization,
