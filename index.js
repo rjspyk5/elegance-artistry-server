@@ -4,12 +4,16 @@ require("dotenv").config();
 const app = express();
 const port = process.env.PORT || 5000;
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
+
+// MiddlewareSetup
 app.use(express.json());
 app.use(cors());
 
+// Testing Route
 app.get("/", (req, res) => {
   res.send("server running");
 });
+
 const uri = `mongodb+srv://${process.env.USER_NAME}:${process.env.PASSWORD}@cluster0.omgilvs.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
 const client = new MongoClient(uri, {
@@ -28,19 +32,32 @@ async function run() {
     //   "Pinged your deployment. You successfully connected to MongoDB!"
     // );
     // Created database connection
+    // ----------------------------------
+
+    // Database collection creating
     const artsCollection = client.db("eleganceArtistary").collection("arts");
-    const reviewCollection = client
-      .db("eleganceArtistary")
-      .collection("review");
     const artsCatagory = client
       .db("eleganceArtistary")
       .collection("artsCatagory");
+    const reviewCollection = client
+      .db("eleganceArtistary")
+      .collection("review");
+    // Database collection creating end
+
+    // ----------------------------------
     // find all data from from artCollection
     app.get("/arts", async (req, res) => {
       const cursor = artsCollection.find();
       const result = await cursor.toArray();
       res.send(result);
     });
+    // find all data and send first six data for homepage from artCollection
+    app.get("/arts/six", async (req, res) => {
+      const cursor = artsCollection.find();
+      const result = await cursor.toArray();
+      res.send(result.slice(0, 6));
+    });
+
     // find specific users data from artCollection
     app.get("/myart/:email", async (req, res) => {
       const query = { email: req.params.email };
@@ -55,30 +72,25 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result);
     });
-    // find all data and send first six data for homepage from artCollection
-    app.get("/arts/six", async (req, res) => {
-      const cursor = artsCollection.find();
-      const result = await cursor.toArray();
-      res.send(result.slice(0, 6));
-    });
-
-    // find all review
-    app.get("/review", async (req, res) => {
-      const cursor = reviewCollection.find();
-      const result = await cursor.toArray();
+    // find single data from artCollection
+    app.get("/art/:id", async (req, res) => {
+      const id = req.params.id;
+      const qurey = { _id: new ObjectId(id) };
+      const result = await artsCollection.findOne(qurey);
       res.send(result);
     });
+
     // find subcatagory data from artSubcatagory
     app.get("/subcategory", async (req, res) => {
       const cursor = artsCatagory.find();
       const result = await cursor.toArray();
       res.send(result);
     });
-    // find single data from artCollection
-    app.get("/art/:id", async (req, res) => {
-      const id = req.params.id;
-      const qurey = { _id: new ObjectId(id) };
-      const result = await artsCollection.findOne(qurey);
+
+    // find all review
+    app.get("/review", async (req, res) => {
+      const cursor = reviewCollection.find();
+      const result = await cursor.toArray();
       res.send(result);
     });
     // insert single review on review collection
@@ -88,14 +100,14 @@ async function run() {
       res.send(result);
     });
 
-    //insert single iteam on database
+    //insert single iteam on artCollection
     app.post("/art", async (req, res) => {
       const data = req.body;
       const result = await artsCollection.insertOne(data);
       res.send(result);
     });
 
-    // update a single iteam on database
+    // update a single iteam into artCollection
     app.patch("/art/:id", async (req, res) => {
       const id = req.params.id;
       const data = req.body;
@@ -119,7 +131,7 @@ async function run() {
       const result = await artsCollection.updateOne(filter, updateDoc, options);
       res.send(result);
     });
-    // delete a single data from database
+    // delete a single data on artCollection
     app.delete("/art/:id", async (req, res) => {
       const id = req.params.id;
       const qurey = { _id: new ObjectId(id) };
@@ -133,4 +145,4 @@ async function run() {
 }
 run().catch(console.dir);
 
-app.listen(port, () => console.log("server running"));
+app.listen(port);
