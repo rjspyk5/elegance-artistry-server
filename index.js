@@ -55,19 +55,16 @@ async function run() {
       res.send(result.slice(0, 6));
     });
 
-    // find all data and send first six data for lastest review
+    // find all data
     app.get("/review", async (req, res) => {
       const cursor = reviewCollection.find();
       const result = await cursor.toArray();
       res.send(result);
     });
     // find subcatagory data
-    app.get("/catagory/:sub", async (req, res) => {
-      const sub = req.params.sub;
-      const qurey = { subcategory_Name: sub };
-      const cursor = artsCatagory.find(qurey);
+    app.get("/subcategory", async (req, res) => {
+      const cursor = artsCatagory.find();
       const result = await cursor.toArray();
-
       res.send(result);
     });
     // find single data from on database
