@@ -51,7 +51,7 @@ async function run() {
     // find specific catagory data from artCollection
     app.get("/catagory/:sub", async (req, res) => {
       const query = { subcategory_Name: req.params.sub };
-      const cursor = artsCatagory.find(query);
+      const cursor = artsCollection.find(query);
       const result = await cursor.toArray();
       res.send(result);
     });
