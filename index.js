@@ -32,6 +32,9 @@ async function run() {
     const reviewCollection = client
       .db("eleganceArtistary")
       .collection("review");
+    const artsCatagory = client
+      .db("eleganceArtistary")
+      .collection("artsCatagory");
     // find all data from database
     app.get("/arts", async (req, res) => {
       const cursor = artsCollection.find();
@@ -56,6 +59,15 @@ async function run() {
     app.get("/review", async (req, res) => {
       const cursor = reviewCollection.find();
       const result = await cursor.toArray();
+      res.send(result);
+    });
+    // find subcatagory data
+    app.get("/catagory/:sub", async (req, res) => {
+      const sub = req.params.sub;
+      const qurey = { subcategory_Name: sub };
+      const cursor = artsCatagory.find(qurey);
+      const result = await cursor.toArray();
+
       res.send(result);
     });
     // find single data from on database
